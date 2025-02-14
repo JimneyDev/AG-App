@@ -16,7 +16,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["JWT_SECRET_KEY"] = "super-secret-key"
 
 # Initialize Bcrypt, and JWT
-bcrypt = Bcrypt()
+bcrypt = Bcrypt(app)
 jwt = JWTManager()
 
 # Initialize extensions with the app
@@ -34,7 +34,8 @@ def signup():
     data = request.get_json()
     username = data.get("username")  # Changed email to username
     password = data.get("password")
-    
+    hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+
     if not username or not password:
         return jsonify({"message": "Username and password are required"}), 400
 
@@ -42,7 +43,7 @@ def signup():
     if user:
         return jsonify({"message": "User already exists"}), 409
 
-    new_user = User(username=username, password=password)  # Changed email to username
+    new_user = User(username=username, password=hashed_password)  # Changed email to username
     db.session.add(new_user)
     db.session.commit()
 
@@ -52,50 +53,54 @@ def signup():
 def login():
     data = request.json
 
-    # Retrieve user by username (was email previously)
-    user = User.query.filter_by(username=data["username"]).first()  # Changed email to username
+    # Retrieve user by username
+    user = User.query.filter_by(username=data["username"]).first()
 
-    # If user doesn't exist or password doesn't match
-    if not user or not check_password_hash(user.password, data["password"]):
+    # Ensure user exists and password is valid
+    if not user or not bcrypt.check_password_hash(user.password, data["password"]):
         return jsonify({"error": "Invalid credentials"}), 401
 
     # Generate JWT token
     access_token = create_access_token(identity=user.id)
 
-    # Return success message with the token and user info (username here)
+    # Return success message with the token and user info
     return jsonify({
         "message": "Login successful!",
         "token": access_token,
-        "user": {"username": user.username}  # Changed email to username
+        "user": {"username": user.username}
     })
 
 @app.route('/favicon.ico')
 def favicon():
     return app.send_static_file('favicon.ico')
 
-@app.route('/users', methods=['GET'])
+@app.route("/users", methods=["GET"])
 def get_users():
-    # Retrieve all users from the database
-    users = User.query.all()  # Query to get all User records
+    users = User.query.all()
+    users_list = [{"username": user.username, "password": user.password} for user in users]
+    print(users_list)  # Debugging line to check the order
+    return jsonify(users_list), 200
 
-    # Prepare the data to be returned
-    user_data = [{'username': user.username, 'password': user.password} for user in users]  # Changed email to username
-    
-    return jsonify(user_data)
-
-@app.route('/delete_user', methods=['DELETE'])
+@app.route("/delete_user", methods=["DELETE"])
 def delete_user():
-    data = request.get_json()
-    username = data.get('username')  # Changed email to username
-    user = User.query.filter_by(username=username).first()  # Changed email to username
+    data = request.json
+    username = data.get("username")
 
-    if user:
-        db.session.delete(user)
-        db.session.commit()
-        return jsonify({"message": "User deleted successfully"}), 200
-    return jsonify({"message": "User not found"}), 404
+    if not username:
+        return jsonify({"error": "Username is required"}), 400
+
+    user = User.query.filter_by(username=username).first()
+    
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    db.session.delete(user)
+    db.session.commit()
+
+    return jsonify({"message": f"User {username} deleted successfully"}), 200
 
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
     app.run(debug=True)
+    

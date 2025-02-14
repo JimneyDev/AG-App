@@ -1,35 +1,45 @@
-import React, { createContext, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import React, { useLayoutEffect } from "react";
+import { View, Text, Button, StyleSheet } from "react-native";
+import { useRouter } from "expo-router";
+import { useNavigation } from '@react-navigation/native';  // Add this import
 
-// Updated API URL to 10.0.2.2 for the Android emulator
-const API_URL = "http://127.0.0.1:5000";  // Use 10.0.2.2 for Android emulator
+export default function HomeScreen() {
+  const router = useRouter();
+  const navigation = useNavigation();  // Initialize navigation
 
-export const AuthContext = createContext();
-
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-
-  const login = async (username, password) => {
-    try {
-      const response = await axios.post(`${API_URL}/login`, { username, password });
-      const { token, user } = response.data;
-
-      await AsyncStorage.setItem("token", token);
-      setUser(user);
-    } catch (error) {
-      alert("Login failed!");
-    }
-  };
-
-  const logout = async () => {
-    await AsyncStorage.removeItem("token");
-    setUser(null);
-  };
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Sign In",  // Set the header title to 'Sign In'
+    });
+  }, [navigation]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+    <View style={styles.container}>
+      <Text style={styles.title}>Welcome</Text>
+      {/* Container for buttons */}
+      <View style={styles.buttonContainer}>
+        <Button title="Sign Up" onPress={() => router.push("/Signup")} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <Button title="Login" onPress={() => router.push("/Login")} />
+      </View>
+    </View>
   );
-};
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    marginBottom: 10, // Add space between the buttons
+    width: "30%", // Optional, adjust the button size
+  },
+});
