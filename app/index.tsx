@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableWithoutFeedback, Animated, Dimensions, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
+import ThemedText from '../components/ThemedText';
 
 // Get the screen width
 const { width } = Dimensions.get("window");

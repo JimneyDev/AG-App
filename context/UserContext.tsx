@@ -1,23 +1,25 @@
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
-export type UserContextType = {
+interface UserContextProps {
   OG_user: string;
-  setOG_user: (user: string) => void;
-};
+  setOGUser: (user: string) => void;
+  displayName: string;
+  setDisplayName: (name: string) => void;
+}
 
-export const UserContext = createContext<UserContextType | undefined>(undefined);
+const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [OG_user, setOG_user] = useState(""); // Manage OG_user state
+  const [OG_user, setOGUser] = useState("defaultUser"); // Your original username
+  const [displayName, setDisplayName] = useState(""); // New global display name
 
   return (
-    <UserContext.Provider value={{ OG_user, setOG_user }}>
+    <UserContext.Provider value={{ OG_user, setOGUser, displayName, setDisplayName }}>
       {children}
     </UserContext.Provider>
   );
 };
 
-// Custom hook to use the UserContext
 export const useUser = () => {
   const context = useContext(UserContext);
   if (!context) {

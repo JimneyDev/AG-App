@@ -6,9 +6,10 @@ import ThemedText from '../../components/ThemedText';
 const { width } = Dimensions.get('window');
 
 const ROUTES = {
-  online: '/screens/OnlineSelection' as const,
-  practice: '/screens/PracticeSelection' as const,
-  settings: '/screens/Settings' as const,
+  equations: './PracticeScreens/EquationsPracticeScreen' as const,
+  onsets: './PracticeScreens/OnSetsPracticeScreen' as const,
+  linguistics: './PracticeScreens/LinguisticsPracticeScreen' as const,
+  menu: './Menu' as const,
 };
 
 const Menu = () => {
@@ -17,10 +18,13 @@ const Menu = () => {
   const [scaleSignup] = useState(new Animated.Value(1));
   const [scaleLogin] = useState(new Animated.Value(1));
   const [scaleSettings] = useState(new Animated.Value(1));
+  const [scaleBack] = useState(new Animated.Value(1));
+  const [pressedBack, setPressedBack] = useState(false);
 
-  const handlePressSignup = () => router.push(ROUTES.online);
-  const handlePressLogin = () => router.push(ROUTES.practice);
-  const handlePressSettings = () => router.push(ROUTES.settings);
+  const handlePressEquations = () => router.push(ROUTES.equations);
+  const handlePressOnSets = () => router.push(ROUTES.onsets);
+  const handlePressLinguistics = () => router.push(ROUTES.linguistics);
+  const handlePressBack = () => router.push(ROUTES.menu);
 
   const handlePressIn = (button: "signup" | "login" | "settings") => {
     setPressedButton(button); 
@@ -34,12 +38,23 @@ const Menu = () => {
     Animated.spring(scaleValue, { toValue: 1, useNativeDriver: true }).start();
   };
 
+  const handlePressBackIn = () => {
+    setPressedBack(true);
+    Animated.spring(scaleBack, { toValue: 1.1, useNativeDriver: true }).start();
+  };
+  
+  const handlePressBackOut = () => {
+    setPressedBack(false);
+    Animated.spring(scaleBack, { toValue: 1, useNativeDriver: true }).start();
+  };
+
   return (
     <View style={styles.menuContainer}>
-      <ThemedText style={styles.heading}>Menu</ThemedText>
+      <ThemedText style={styles.subheading}>Practice</ThemedText>
+      <ThemedText style={styles.heading}>Game Select</ThemedText>
 
       <Pressable
-        onPress={handlePressSignup}
+        onPress={handlePressEquations}
         onPressIn={() => handlePressIn('signup')}
         onPressOut={() => handlePressOut('signup')}
         onTouchStart={() => {}}
@@ -48,12 +63,12 @@ const Menu = () => {
         <Animated.View
           style={[styles.button, { width: width * 0.3 }, pressedButton === 'signup' && styles.buttonPressed, { transform: [{ scale: scaleSignup }] }]}
         >
-          <Text style={styles.buttonText}>Online</Text>
+          <Text style={styles.buttonText}>Equations</Text>
         </Animated.View>
       </Pressable>
 
       <Pressable
-        onPress={handlePressLogin}
+        onPress={handlePressOnSets}
         onPressIn={() => handlePressIn('login')}
         onPressOut={() => handlePressOut('login')}
         onTouchStart={() => {}}
@@ -62,12 +77,12 @@ const Menu = () => {
         <Animated.View
           style={[styles.button, { width: width * 0.3 }, pressedButton === 'login' && styles.buttonPressed, { transform: [{ scale: scaleLogin }] }]}
         >
-          <Text style={styles.buttonText}>Practice</Text>
+          <Text style={styles.buttonText}>OnSets</Text>
         </Animated.View>
       </Pressable>
 
       <Pressable
-        onPress={handlePressSettings}
+        onPress={handlePressLinguistics}
         onPressIn={() => handlePressIn('settings')}
         onPressOut={() => handlePressOut('settings')}
         onTouchStart={() => {}}
@@ -76,7 +91,19 @@ const Menu = () => {
         <Animated.View
           style={[styles.button, { width: width * 0.3 }, pressedButton === 'settings' && styles.buttonPressed, { transform: [{ scale: scaleSettings }] }]}
         >
-          <Text style={styles.buttonText}>Settings</Text>
+          <Text style={styles.buttonText}>Linguistics</Text>
+        </Animated.View>
+      </Pressable>
+
+      <Pressable
+        onPress={handlePressBack}
+        onPressIn={handlePressBackIn}
+        onPressOut={handlePressBackOut}
+        >
+        <Animated.View
+            style={[styles.button, { width: width * 0.25 }, pressedBack && styles.buttonPressed, { transform: [{ scale: scaleBack }] }]}
+        >
+            <Text style={styles.buttonText}>Back</Text>
         </Animated.View>
       </Pressable>
     </View>
@@ -91,9 +118,14 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   heading: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+  subheading: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
   button: {
     padding: 10,

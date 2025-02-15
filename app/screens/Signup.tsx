@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Animated, StyleSheet, Dimensions } from "react-native";
+import ThemedText from '../../components/ThemedText';
 
 // Get screen width
 const { width } = Dimensions.get("window");
@@ -52,7 +53,7 @@ export default function SignUpScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
+      <ThemedText style={styles.title}>Sign Up</ThemedText>
 
       <TextInput
         style={styles.input}

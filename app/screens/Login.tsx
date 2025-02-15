@@ -1,24 +1,17 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Animated, StyleSheet, Dimensions } from "react-native";
 import { useRouter } from "expo-router";
-import { UserContext } from "../../context/UserContext"; // Import UserContext
+import { useUser } from "../../context/UserContext"; // Import useUser instead of UserContext
+import ThemedText from '../../components/ThemedText';
 
-// Get screen width
 const { width } = Dimensions.get("window");
 
 export default function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const userContext = useContext(UserContext); // Ensure context is not undefined
+  const { setOGUser } = useUser(); // Destructure setOGUser from useUser
 
-  if (!userContext) {
-    throw new Error("UserContext must be used within a UserProvider");
-  }
-  
-  const { setOG_user } = userContext; // Use context to store username
-
-  // Animation for button scale
   const [scale] = useState(new Animated.Value(1));
   const [pressed, setPressed] = useState(false);
 
@@ -50,7 +43,7 @@ export default function LoginScreen() {
       console.log("Login Response:", data);
 
       if (response.ok) {
-        setOG_user(username); // Store the username in context
+        setOGUser(username); // Use setOGUser from context
         alert("Login successful!");
         router.push("/screens/Menu");
       } else {
@@ -64,7 +57,7 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <ThemedText style={styles.title}>Login</ThemedText>
 
       <TextInput
         style={styles.input}
@@ -81,7 +74,6 @@ export default function LoginScreen() {
         secureTextEntry
       />
 
-      {/* Animated Login Button */}
       <Animated.View style={{ transform: [{ scale }] }}>
         <TouchableOpacity
           style={[styles.button, { width: width * 0.3 }, pressed && styles.buttonPressed]}
