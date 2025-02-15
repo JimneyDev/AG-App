@@ -85,10 +85,10 @@ const Menu = () => {
 
 const styles = StyleSheet.create({
   menuContainer: {
-    display: 'flex',
-    flexDirection: 'column',
+    flex: 1,
     alignItems: 'center',
     padding: 20,
+    justifyContent: "center",
   },
   heading: {
     fontSize: 24,

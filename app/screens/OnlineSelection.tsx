@@ -101,7 +101,7 @@ const Menu = () => {
         onPressOut={handlePressBackOut}
         >
         <Animated.View
-            style={[styles.button, { width: width * 0.25 }, pressedBack && styles.buttonPressed, { transform: [{ scale: scaleBack }] }]}
+            style={[styles.button, { width: width * 0.3 }, pressedBack && styles.buttonPressed, { transform: [{ scale: scaleBack }] }]}
         >
             <Text style={styles.buttonText}>Back</Text>
         </Animated.View>
@@ -112,10 +112,10 @@ const Menu = () => {
 
 const styles = StyleSheet.create({
   menuContainer: {
-    display: 'flex',
-    flexDirection: 'column',
+    flex: 1,
     alignItems: 'center',
     padding: 20,
+    justifyContent: "center",
   },
   heading: {
     fontSize: 30,
