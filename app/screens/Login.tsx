@@ -1,8 +1,11 @@
+// app/screens/Login.tsx
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Animated, StyleSheet, Dimensions } from "react-native";
 import { useRouter } from "expo-router";
-import { useUser } from "../../context/UserContext"; // Import useUser instead of UserContext
+import { useUser } from "../../context/UserContext";
+import { useTheme } from "../../context/ThemeContext";
 import ThemedText from '../../components/ThemedText';
+import axios from "axios";
 
 const { width } = Dimensions.get("window");
 
@@ -10,8 +13,10 @@ export default function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { setOGUser } = useUser(); // Destructure setOGUser from useUser
+  const { setOGUser, setDisplayName } = useUser();
+  const { setDarkMode } = useTheme();
 
+  // Animation for button scale
   const [scale] = useState(new Animated.Value(1));
   const [pressed, setPressed] = useState(false);
 
@@ -33,21 +38,16 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:5000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-      console.log("Login Response:", data);
-
-      if (response.ok) {
-        setOGUser(username); // Use setOGUser from context
+      const response = await axios.post("http://127.0.0.1:5000/login", { username, password });
+      if (response.status === 200) {
+        const userData = response.data.user;
+        setOGUser(userData.username);
+        setDisplayName(userData.display_name);
+        setDarkMode(userData.dark_mode);
         alert("Login successful!");
         router.push("/screens/Menu");
       } else {
-        alert("Login failed: " + data.message);
+        alert("Login failed: " + response.data.message);
       }
     } catch (error) {
       console.error("Login Error:", error);
