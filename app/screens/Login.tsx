@@ -38,7 +38,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:5000/login", { username, password });
+      const response = await axios.post("http://192.168.0.1:5000/login", { username, password });
       if (response.status === 200) {
         const userData = response.data.user;
         setOGUser(userData.username);

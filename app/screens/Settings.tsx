@@ -67,7 +67,7 @@ export default function SettingsScreen() {
   // Function to save changes to the backend
   const handleSaveChanges = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:5000/update_settings", {
+      const response = await axios.post("http://192.168.0.1:5000/update_settings", {
         username: OG_user,
         displayName: localDisplayName,
         darkMode: localDarkMode,
@@ -89,7 +89,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View style={[styles.container, localDarkMode && styles.darkContainer]}>
+    <View style={[styles.container, localDarkMode ? styles.darkContainer : styles.lightContainer]}>
       <Text style={[styles.title, localDarkMode && styles.darkText]}>Settings</Text>
 
       {/* Display Name Section */}
@@ -163,6 +163,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+  },
+  lightContainer: {
+    backgroundColor: "#fff",
   },
   darkContainer: {
     backgroundColor: "#333",

@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { Slot } from 'expo-router';
 import { UserProvider } from '../context/UserContext';
 import { ThemeProvider, useTheme } from '../context/ThemeContext';
+import { SocketProvider } from "../context/SocketContext";
 
 function LayoutContent() {
   const { isDarkMode } = useTheme();
@@ -16,11 +17,13 @@ function LayoutContent() {
 
 export default function RootLayout() {
   return (
-    <UserProvider>
-      <ThemeProvider>
-        <LayoutContent />
-      </ThemeProvider>
-    </UserProvider>
+    <SocketProvider>
+      <UserProvider>
+        <ThemeProvider>
+          <LayoutContent />
+        </ThemeProvider>
+      </UserProvider>
+    </SocketProvider>
   );
 }
 

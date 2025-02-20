@@ -6,11 +6,11 @@ import ThemedText from '../../components/ThemedText';
 const { width } = Dimensions.get('window');
 
 const ROUTES = {
-  equations: './OnlineScreens/EquationsOnlineScreen' as const,
-  onsets: './OnlineScreens/OnSetsOnlineScreen' as const,
-  linguistics: './OnlineScreens/LinguisticsOnlineScreen' as const,
-  menu: './Menu' as const,
-};
+  equations: "/OnlineScreens/EquationsOnlineScreen",
+  onsets: "/OnlineScreens/OnSetsOnlineScreen",
+  linguistics: "/OnlineScreens/LinguisticsOnlineScreen",
+  menu: "/screens/Menu",
+} as const; 
 
 const Menu = () => {
   const router = useRouter();
@@ -57,8 +57,6 @@ const Menu = () => {
         onPress={handlePressEquations}
         onPressIn={() => handlePressIn('signup')}
         onPressOut={() => handlePressOut('signup')}
-        onTouchStart={() => {}}
-        onTouchEnd={() => {}}
       >
         <Animated.View
           style={[styles.button, { width: width * 0.3 }, pressedButton === 'signup' && styles.buttonPressed, { transform: [{ scale: scaleSignup }] }]}
@@ -71,8 +69,6 @@ const Menu = () => {
         onPress={handlePressOnSets}
         onPressIn={() => handlePressIn('login')}
         onPressOut={() => handlePressOut('login')}
-        onTouchStart={() => {}}
-        onTouchEnd={() => {}}
       >
         <Animated.View
           style={[styles.button, { width: width * 0.3 }, pressedButton === 'login' && styles.buttonPressed, { transform: [{ scale: scaleLogin }] }]}
@@ -85,8 +81,6 @@ const Menu = () => {
         onPress={handlePressLinguistics}
         onPressIn={() => handlePressIn('settings')}
         onPressOut={() => handlePressOut('settings')}
-        onTouchStart={() => {}}
-        onTouchEnd={() => {}}
       >
         <Animated.View
           style={[styles.button, { width: width * 0.3 }, pressedButton === 'settings' && styles.buttonPressed, { transform: [{ scale: scaleSettings }] }]}
@@ -99,7 +93,7 @@ const Menu = () => {
         onPress={handlePressBack}
         onPressIn={handlePressBackIn}
         onPressOut={handlePressBackOut}
-        >
+      >
         <Animated.View
             style={[styles.button, { width: width * 0.3 }, pressedBack && styles.buttonPressed, { transform: [{ scale: scaleBack }] }]}
         >
