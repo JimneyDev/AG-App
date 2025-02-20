@@ -1,6 +1,7 @@
 // app/context/SocketContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import io from 'socket.io-client';
+import { API_URL } from "../app/config";
 
 interface SocketContextProps {
   socket: SocketIOClient.Socket | null;
@@ -13,7 +14,7 @@ interface SocketProviderProps {
 const SocketContext = createContext<SocketContextProps | undefined>(undefined);
 
 // URL of the Socket server (adjust as needed)
-const SOCKET_SERVER_URL = "http://127.0.0.1:5000";
+const SOCKET_SERVER_URL = '${API_URL}';
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null);

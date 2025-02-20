@@ -37,7 +37,7 @@ const EquationsOnlineScreen = () => {
     "Send Invite": new Animated.Value(1),
     Cancel: new Animated.Value(1),
   });
-
+  
   // Get screen width; division buttons should be 30% of the screen width
   const screenWidth = Dimensions.get("window").width;
 

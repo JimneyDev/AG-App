@@ -2,10 +2,7 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Animated, StyleSheet, Dimensions } from "react-native";
 import { useRouter } from "expo-router";
-import { useUser } from "../../context/UserContext";
-import { useTheme } from "../../context/ThemeContext";
-import ThemedText from '../../components/ThemedText';
-import axios from "axios";
+import { API_URL } from "../config";
 
 const { width } = Dimensions.get("window");
 
@@ -13,8 +10,6 @@ export default function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { setOGUser, setDisplayName } = useUser();
-  const { setDarkMode } = useTheme();
 
   // Animation for button scale
   const [scale] = useState(new Animated.Value(1));
@@ -38,16 +33,19 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://192.168.0.1:5000/login", { username, password });
-      if (response.status === 200) {
-        const userData = response.data.user;
-        setOGUser(userData.username);
-        setDisplayName(userData.display_name);
-        setDarkMode(userData.dark_mode);
+      const response = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await response.json();
+      console.log("Login Response:", data);
+
+      if (response.ok) {
         alert("Login successful!");
         router.push("/screens/Menu");
       } else {
-        alert("Login failed: " + response.data.message);
+        alert("Login failed: " + data.message);
       }
     } catch (error) {
       console.error("Login Error:", error);
@@ -57,8 +55,8 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <ThemedText style={styles.title}>Login</ThemedText>
-
+      <Text style={styles.title}>Login</Text>
+      
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -74,6 +72,7 @@ export default function LoginScreen() {
         secureTextEntry
       />
 
+      {/* Animated Login Button */}
       <Animated.View style={{ transform: [{ scale }] }}>
         <TouchableOpacity
           style={[styles.button, { width: width * 0.3 }, pressed && styles.buttonPressed]}

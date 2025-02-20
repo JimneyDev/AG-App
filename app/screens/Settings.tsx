@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 import { useUser } from "../../context/UserContext";
 import { useTheme } from "../../context/ThemeContext";
 import axios from "axios";
+import { API_URL } from "../config";
 
 const { width } = Dimensions.get("window");
 
@@ -67,7 +68,7 @@ export default function SettingsScreen() {
   // Function to save changes to the backend
   const handleSaveChanges = async () => {
     try {
-      const response = await axios.post("http://192.168.0.1:5000/update_settings", {
+      const response = await axios.post(`${API_URL}/update_settings`, {
         username: OG_user,
         displayName: localDisplayName,
         darkMode: localDarkMode,
