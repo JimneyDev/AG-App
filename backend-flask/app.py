@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token
 from flask_cors import CORS
+from flask_socketio import SocketIO  # Import Flask-SocketIO
 from database import db  # Ensure db is correctly imported from database.py
 from models import User  # Ensure User model includes display_name and dark_mode
 from flask_migrate import Migrate
@@ -23,6 +24,9 @@ migrate = Migrate(app, db)
 bcrypt.init_app(app)
 jwt.init_app(app)
 
+# Initialize Flask-SocketIO
+socketio = SocketIO(app, cors_allowed_origins="*", logger=True, engineio_logger=True)
+
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({"message": "Welcome to the API!"})
@@ -41,7 +45,6 @@ def signup():
     if user:
         return jsonify({"message": "User already exists"}), 409
 
-    # Default display_name to username if not provided; dark_mode defaults to False.
     display_name = data.get("display_name", username)
     dark_mode = data.get("dark_mode", False)
 
@@ -123,7 +126,20 @@ def delete_user():
     db.session.commit()
     return jsonify({"message": f"User {username} deleted successfully"}), 200
 
+# Socket.IO events
+@socketio.on('connect')
+def handle_connect():
+    print("Client connected!")
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print("Client disconnected!")
+
+@socketio.on('message')
+def handle_message(data):
+    print(f"Message received: {data}")
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    socketio.run(app, debug=True, host='0.0.0.0', port=5000)  # Use socketio.run() instead

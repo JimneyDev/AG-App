@@ -1,31 +1,32 @@
-// app/context/SocketContext.tsx
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import io from 'socket.io-client';
+import io from 'socket.io-client'; // Default import for io
 import { API_URL } from "../app/config";
 
+// Define the type of the socket connection
 interface SocketContextProps {
-  socket: SocketIOClient.Socket | null;
+  socket: SocketIOClient.Socket | null; // Correct type for socket
 }
 
 interface SocketProviderProps {
   children: ReactNode;
 }
+const socket = io.connect(`http://${API_URL}`);
 
 const SocketContext = createContext<SocketContextProps | undefined>(undefined);
 
-// URL of the Socket server (adjust as needed)
-const SOCKET_SERVER_URL = '${API_URL}';
+// Full URL for your WebSocket server
+const SOCKET_SERVER_URL = `${API_URL}/socket.io`; // Full path including /socket.io
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<SocketIOClient.Socket | null>(null);
 
   useEffect(() => {
-    const newSocket = io(SOCKET_SERVER_URL);
+    const newSocket = io(SOCKET_SERVER_URL, { transports: ['websocket'] });
     setSocket(newSocket);
 
     // Cleanup: close socket on unmount
     return () => {
-      newSocket.close();  // This is the correct cleanup
+      newSocket.close();
     };
   }, []);
 
