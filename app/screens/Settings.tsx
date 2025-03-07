@@ -1,19 +1,11 @@
 // app/screens/Settings.tsx
 import React, { useEffect, useState } from "react";
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  Switch, 
-  StyleSheet, 
-  Pressable, 
-  Animated, 
-  Dimensions 
-} from "react-native";
+import { View, TextInput, Switch, StyleSheet, Pressable, Animated, Dimensions } from "react-native";
 import { useRouter } from "expo-router";
 import { useUser } from "../../context/UserContext";
 import { useTheme } from "../../context/ThemeContext";
 import axios from "axios";
+import ThemedText from "../../components/ThemedText"; // Import ThemedText component
 
 const { width } = Dimensions.get("window");
 
@@ -89,19 +81,20 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View style={[styles.container, localDarkMode && styles.darkContainer]}>
-      <Text style={[styles.title, localDarkMode && styles.darkText]}>Settings</Text>
+    <View style={[styles.container, isDarkMode && styles.darkContainer]}>
+      <ThemedText style={styles.title}>Settings</ThemedText>
 
       {/* Display Name Section */}
       <View style={styles.optionContainer}>
-        <Text style={[styles.ogUserText, localDarkMode && styles.darkText]}>
+        <ThemedText style={styles.ogUserText}>
           Username: {OG_user}
-        </Text>
-        <Text style={[styles.optionText, localDarkMode && styles.darkText]}>
-          Display Name
-        </Text>
+        </ThemedText>
+        <ThemedText style={styles.optionText}>Display Name</ThemedText>
         <TextInput
-          style={[styles.input, localDarkMode && styles.darkInput]}
+          style={[
+            styles.input,
+            isDarkMode && styles.darkInput, // Adjust input style based on dark mode
+          ]}
           value={localDisplayName}
           onChangeText={setLocalDisplayName}
         />
@@ -109,9 +102,7 @@ export default function SettingsScreen() {
 
       {/* Dark Mode Toggle Section */}
       <View style={styles.optionContainer}>
-        <Text style={[styles.optionText, localDarkMode && styles.darkText]}>
-          Dark Mode
-        </Text>
+        <ThemedText style={styles.optionText}>Dark Mode</ThemedText>
         <Switch
           value={localDarkMode}
           onValueChange={setLocalDarkMode}
@@ -132,7 +123,7 @@ export default function SettingsScreen() {
             { transform: [{ scale: scaleSave }] },
           ]}
         >
-          <Text style={styles.buttonText}>Save Changes</Text>
+          <ThemedText style={styles.buttonText}>Save Changes</ThemedText>
         </Animated.View>
       </Pressable>
 
@@ -150,7 +141,7 @@ export default function SettingsScreen() {
             { transform: [{ scale: scaleBack }] },
           ]}
         >
-          <Text style={styles.buttonText}>Back</Text>
+          <ThemedText style={styles.buttonText}>Back</ThemedText>
         </Animated.View>
       </Pressable>
     </View>
@@ -171,15 +162,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    color: "#000",
-  },
-  darkText: {
-    color: "#fff",
   },
   ogUserText: {
     fontSize: 18,
     marginBottom: 10,
-    color: "#000",
   },
   optionContainer: {
     marginBottom: 20,
@@ -188,7 +174,6 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 18,
     marginBottom: 5,
-    color: "#000",
   },
   input: {
     width: "100%",
@@ -197,12 +182,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 10,
     borderRadius: 5,
-    color: "#000",
   },
   darkInput: {
-    backgroundColor: "#555",
-    borderColor: "#444",
-    color: "#fff",
+    backgroundColor: "#555", // Dark background for input in dark mode
+    color: "#fff",            // White text in dark mode
+    borderColor: "#444",      // Dark border color for dark mode
   },
   button: {
     padding: 10,
