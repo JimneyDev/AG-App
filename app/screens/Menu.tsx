@@ -46,7 +46,7 @@ const Menu = () => {
         onTouchEnd={() => {}}
       >
         <Animated.View
-          style={[styles.button, { width: width * 0.3 }, pressedButton === 'signup' && styles.buttonPressed, { transform: [{ scale: scaleSignup }] }]}
+          style={[styles.button, { width: width * 0.35 }, pressedButton === 'signup' && styles.buttonPressed, { transform: [{ scale: scaleSignup }] }]}
         >
           <Text style={styles.buttonText}>Online</Text>
         </Animated.View>
@@ -60,7 +60,7 @@ const Menu = () => {
         onTouchEnd={() => {}}
       >
         <Animated.View
-          style={[styles.button, { width: width * 0.3 }, pressedButton === 'login' && styles.buttonPressed, { transform: [{ scale: scaleLogin }] }]}
+          style={[styles.button, { width: width * 0.35 }, pressedButton === 'login' && styles.buttonPressed, { transform: [{ scale: scaleLogin }] }]}
         >
           <Text style={styles.buttonText}>Practice</Text>
         </Animated.View>
@@ -74,7 +74,7 @@ const Menu = () => {
         onTouchEnd={() => {}}
       >
         <Animated.View
-          style={[styles.button, { width: width * 0.3 }, pressedButton === 'settings' && styles.buttonPressed, { transform: [{ scale: scaleSettings }] }]}
+          style={[styles.button, { width: width * 0.35 }, pressedButton === 'settings' && styles.buttonPressed, { transform: [{ scale: scaleSettings }] }]}
         >
           <Text style={styles.buttonText}>Settings</Text>
         </Animated.View>

@@ -54,7 +54,7 @@ export default function SignUpScreen() {
       <ThemedText style={styles.title}>Sign Up</ThemedText>
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, { width: width * 0.3 }]}
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
@@ -63,7 +63,7 @@ export default function SignUpScreen() {
       />
 
       <TextInput
-        style={styles.input}
+        style={[styles.input, { width: width * 0.3 }]}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
@@ -72,7 +72,7 @@ export default function SignUpScreen() {
 
       <Animated.View style={{ transform: [{ scale }] }}>
         <TouchableOpacity
-          style={[styles.button, { width: width * 0.3 }, pressed && styles.buttonPressed]}
+          style={[styles.button, { width: width * 0.2 }, pressed && styles.buttonPressed]}
           onPress={handleSignUp}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}

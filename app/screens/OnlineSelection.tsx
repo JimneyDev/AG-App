@@ -6,7 +6,7 @@ import ThemedText from '../../components/ThemedText';
 const { width } = Dimensions.get('window');
 
 const ROUTES = {
-  equations: './OnlineScreens/EquationsOnlineScreen' as const,
+  equations: '../OnlineScreens/EquationsOnlineScreen' as const,
   onsets: './OnlineScreens/OnSetsOnlineScreen' as const,
   linguistics: './OnlineScreens/LinguisticsOnlineScreen' as const,
   menu: './Menu' as const,
@@ -61,7 +61,7 @@ const Menu = () => {
         onTouchEnd={() => {}}
       >
         <Animated.View
-          style={[styles.button, { width: width * 0.3 }, pressedButton === 'signup' && styles.buttonPressed, { transform: [{ scale: scaleSignup }] }]}
+          style={[styles.button, { width: width * 0.35 }, pressedButton === 'signup' && styles.buttonPressed, { transform: [{ scale: scaleSignup }] }]}
         >
           <Text style={styles.buttonText}>Equations</Text>
         </Animated.View>
@@ -75,7 +75,7 @@ const Menu = () => {
         onTouchEnd={() => {}}
       >
         <Animated.View
-          style={[styles.button, { width: width * 0.3 }, pressedButton === 'login' && styles.buttonPressed, { transform: [{ scale: scaleLogin }] }]}
+          style={[styles.button, { width: width * 0.35 }, pressedButton === 'login' && styles.buttonPressed, { transform: [{ scale: scaleLogin }] }]}
         >
           <Text style={styles.buttonText}>OnSets</Text>
         </Animated.View>
@@ -89,7 +89,7 @@ const Menu = () => {
         onTouchEnd={() => {}}
       >
         <Animated.View
-          style={[styles.button, { width: width * 0.3 }, pressedButton === 'settings' && styles.buttonPressed, { transform: [{ scale: scaleSettings }] }]}
+          style={[styles.button, { width: width * 0.35 }, pressedButton === 'settings' && styles.buttonPressed, { transform: [{ scale: scaleSettings }] }]}
         >
           <Text style={styles.buttonText}>Linguistics</Text>
         </Animated.View>
@@ -101,7 +101,7 @@ const Menu = () => {
         onPressOut={handlePressBackOut}
         >
         <Animated.View
-            style={[styles.button, { width: width * 0.3 }, pressedBack && styles.buttonPressed, { transform: [{ scale: scaleBack }] }]}
+            style={[styles.button, { width: width * 0.35 }, pressedBack && styles.buttonPressed, { transform: [{ scale: scaleBack }] }]}
         >
             <Text style={styles.buttonText}>Back</Text>
         </Animated.View>
@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   button: {
+    width: "35%",
     padding: 10,
     backgroundColor: '#3498db',
     borderRadius: 5,
