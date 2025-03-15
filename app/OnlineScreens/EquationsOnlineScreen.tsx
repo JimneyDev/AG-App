@@ -7,60 +7,45 @@ import {
   Dimensions,
   Animated,
   Easing,
+  TextInput,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useTheme } from "../../context/ThemeContext";
 
 const { width } = Dimensions.get("window");
 
-// Define your base (light) button colors
+// Base (light) button colors
 const baseColors = {
   elementary: "#3498db", // Blue
-  middle: "#08cb00",     // Green
-  junior: "#f1dd00",     // Yellow
-  senior: "#fa000a",     // Red
+  middle: "#02c400",     // Green
+  junior: "#eada0f",     // Yellow
+  senior: "#e21d25",     // Red
 };
 
-// Define the darker colors to which the buttons should fade when pressed
+// Darker colors for pressed state
 const pressedColors = {
-  elementary: "#1F4F80", // Darker Blue
-  middle: "#006400",     // Darker Green
-  junior: "#B8860B",     // Darker Yellow
-  senior: "#8B0000",     // Darker Red
+  elementary: "#3059d2", // Darker Blue
+  middle: "#168b2c",     // Darker Green
+  junior: "#c8b227",     // Darker Yellow
+  senior: "#bd191f",     // Darker Red
 };
 
-/**
- * darkenColor
- *
- * A utility function that darkens a hex color by a specified percentage.
- * (Not used in this version since we use pre-defined pressedColors.)
- */
-function darkenColor(hex: string, percent: number): string {
-  let hexValue = hex.charAt(0) === "#" ? hex.slice(1) : hex;
-  let num = parseInt(hexValue, 16);
-  let amt = Math.round(2.55 * percent);
-  let r = Math.max((num >> 16) - amt, 0);
-  let g = Math.max(((num >> 8) & 0x00ff) - amt, 0);
-  let b = Math.max((num & 0x0000ff) - amt, 0);
-  return `rgb(${r}, ${g}, ${b})`;
-}
-
-/**
- * AnimatedButton Component
- *
- * Renders a button that uses Animated interpolation to smoothly transition its background color
- * from the base color to the pressed (darker) color and scales up when pressed.
- */
 interface AnimatedButtonProps {
   title: string;
   baseColor: string;
   pressedColor: string;
+  onPress: () => void;
+  isActive: boolean;
 }
 
-const AnimatedButton: React.FC<AnimatedButtonProps> = ({ title, baseColor, pressedColor }) => {
-  // Animated value for scaling
+const AnimatedButton: React.FC<AnimatedButtonProps> = ({
+  title,
+  baseColor,
+  pressedColor,
+  onPress,
+  isActive,
+}) => {
   const scaleAnim = useState(new Animated.Value(1))[0];
-  // Animated value for color interpolation (0 = base, 1 = pressed)
   const colorAnim = useState(new Animated.Value(0))[0];
 
   const onPressIn = () => {
@@ -95,14 +80,16 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({ title, baseColor, press
     ]).start();
   };
 
-  // Interpolate the background color from baseColor to pressedColor
-  const backgroundColor = colorAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [baseColor, pressedColor],
-  });
+  // If this button's dropdown is active, force the pressedColor; otherwise, interpolate.
+  const backgroundColor = isActive
+    ? pressedColor
+    : colorAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [baseColor, pressedColor],
+      });
 
   return (
-    <Pressable onPressIn={onPressIn} onPressOut={onPressOut}>
+    <Pressable onPressIn={onPressIn} onPressOut={onPressOut} onPress={onPress}>
       <Animated.View
         style={[
           styles.button,
@@ -115,30 +102,69 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({ title, baseColor, press
   );
 };
 
-/**
- * EquationsOnlineScreen Component
- *
- * Uses the global theme from ThemeContext to set the background and text colors.
- * Renders the subtitle, title, and four division buttons using the AnimatedButton component.
- */
 export default function EquationsOnlineScreen() {
   const router = useRouter();
   const { isDarkMode } = useTheme();
 
-  // Define container theme colors for light and dark modes
-  const lightTheme = { background: "#FFFFFF", text: "#000000" };
-  const darkTheme = { background: "#333333", text: "#FFFFFF" };
-  const themeColors = isDarkMode ? darkTheme : lightTheme;
+  // Global theme for container, text, input background, and placeholder
+  const themeColors = isDarkMode
+    ? { background: "#333333", text: "#FFFFFF", inputBackground: "#555555", placeholder: "#AAAAAA" }
+    : { background: "#FFFFFF", text: "#000000", inputBackground: "#EEEEEE", placeholder: "#666666" };
+
+  // State for tracking which division's dropdown is open
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  // State for the invite username input
+  const [inviteUsername, setInviteUsername] = useState<string>("");
+
+  const handlePressDivision = (division: string) => {
+    // Toggle the dropdown: close if already open; otherwise, open this one
+    setActiveDropdown((prev) => (prev === division ? null : division));
+  };
 
   return (
     <View style={[styles.container, { backgroundColor: themeColors.background }]}>
       <Text style={[styles.subtitle, { color: themeColors.text }]}>Equations Online</Text>
       <Text style={[styles.title, { color: themeColors.text }]}>Divisions</Text>
 
-      <AnimatedButton title="Elementary" baseColor={baseColors.elementary} pressedColor={pressedColors.elementary} />
-      <AnimatedButton title="Middle" baseColor={baseColors.middle} pressedColor={pressedColors.middle} />
-      <AnimatedButton title="Junior" baseColor={baseColors.junior} pressedColor={pressedColors.junior} />
-      <AnimatedButton title="Senior" baseColor={baseColors.senior} pressedColor={pressedColors.senior} />
+      {Object.entries(baseColors).map(([division, color]) => (
+        <View key={division} style={styles.divisionContainer}>
+          <AnimatedButton
+            title={division.charAt(0).toUpperCase() + division.slice(1)}
+            baseColor={color}
+            pressedColor={pressedColors[division as keyof typeof pressedColors] ?? color}
+            onPress={() => handlePressDivision(division)}
+            isActive={activeDropdown === division}
+          />
+
+          {activeDropdown === division && (
+            <View style={[styles.dropdown, { backgroundColor: themeColors.inputBackground }]}>
+              <TextInput
+                style={[
+                  styles.input,
+                  { color: themeColors.text, backgroundColor: themeColors.inputBackground },
+                ]}
+                placeholder="Enter Player's Username"
+                placeholderTextColor={isDarkMode ? "#FFFFFF" : themeColors.placeholder}
+                value={inviteUsername}
+                onChangeText={setInviteUsername}
+              />
+              <AnimatedButton
+                title="Invite Friend"
+                baseColor={baseColors.middle} // Invite Friend button matches the unpressed Middle button color
+                pressedColor={pressedColors.middle}
+                onPress={() => console.log(`Inviting ${inviteUsername}`)} // Replace with your invite logic
+                isActive={false}
+              />
+              <Text style={[styles.noteText, { color: themeColors.text }]}>
+                Check the Settings to see your Username
+              </Text>
+              <Text style={[styles.noteText, { color: themeColors.text }]}>
+                Not the Display Name
+              </Text>
+            </View>
+          )}
+        </View>
+      ))}
     </View>
   );
 }
@@ -152,22 +178,45 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   subtitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
+  },
+  divisionContainer: {
+    alignItems: "center",
+    marginBottom: 10,
   },
   button: {
     padding: 10,
     borderRadius: 5,
-    marginVertical: 10,
     alignItems: "center",
+    marginVertical: 10,
   },
   buttonText: {
-    color: "#fff",
+    color: "#FFFFFF",
     fontSize: 16,
+  },
+  dropdown: {
+    padding: 10,
+    borderRadius: 6,
+    alignItems: "center",
+    width: width * 0.6,
+  },
+  input: {
+    width: "100%",
+    padding: 10,
+    borderRadius: 8,
+    fontSize: 16,
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  noteText: {
+    fontSize: 10,
+    marginTop: 2,
+    textAlign: "center",
   },
 });
