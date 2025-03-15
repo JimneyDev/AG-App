@@ -5,10 +5,10 @@ import ThemedText from '../../components/ThemedText';
 
 const { width } = Dimensions.get('window');
 
-const ROUTES = {
+const ROUTES = { 
   equations: '../OnlineScreens/EquationsOnlineScreen' as const,
-  onsets: './OnlineScreens/OnSetsOnlineScreen' as const,
-  linguistics: './OnlineScreens/LinguisticsOnlineScreen' as const,
+  onsets: 'C:/Users/jonat/CubeGames_App/ag-app/app/OnlineScreens/OnSetsOnlineScreen' as const,
+  linguistics: 'C:/Users/jonat/CubeGames_App/ag-app/app/OnlineScreens/LinguisticsOnlineScreen' as const,
   menu: './Menu' as const,
 };
 
@@ -128,7 +128,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   button: {
-    width: "35%",
     padding: 10,
     backgroundColor: '#3498db',
     borderRadius: 5,

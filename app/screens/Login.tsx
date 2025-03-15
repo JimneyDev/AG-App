@@ -60,14 +60,14 @@ export default function LoginScreen() {
       <ThemedText style={styles.title}>Login</ThemedText>
 
       <TextInput
-        style={[styles.input, { width: width * 0.3 }]}
+        style={styles.input}
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
         autoCapitalize="none"
       />
       <TextInput
-        style={[styles.input, { width: width * 0.3 }]}
+        style={styles.input}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
@@ -76,7 +76,7 @@ export default function LoginScreen() {
 
       <Animated.View style={{ transform: [{ scale }] }}>
         <TouchableOpacity
-          style={[styles.button, { width: width * 0.2 }, pressed && styles.buttonPressed]}
+          style={[styles.button, { width: width * 0.3 }, pressed && styles.buttonPressed]}
           onPress={handleLogin}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}

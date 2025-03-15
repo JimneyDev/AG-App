@@ -16,9 +16,9 @@ const { width } = Dimensions.get("window");
 // Define your base (light) button colors
 const baseColors = {
   elementary: "#3498db", // Blue
-  middle: "#02c400",     // Green
-  junior: "#e5ec00",     // Yellow
-  senior: "#ff1500",     // Red
+  middle: "#08cb00",     // Green
+  junior: "#f1dd00",     // Yellow
+  senior: "#fa000a",     // Red
 };
 
 // Define the darker colors to which the buttons should fade when pressed

@@ -93,8 +93,7 @@ export default function SettingsScreen() {
         <TextInput
           style={[
             styles.input,
-            isDarkMode && styles.darkInput,
-            { width: width * 0.3 },
+            isDarkMode && styles.darkInput, // Adjust input style based on dark mode
           ]}
           value={localDisplayName}
           onChangeText={setLocalDisplayName}
@@ -169,9 +168,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   optionContainer: {
-    marginLeft: 0,
-    width: 300,
-    height: 100,
+    marginBottom: 20,
+    width: "100%",
   },
   optionText: {
     fontSize: 18,
@@ -184,7 +182,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 10,
     borderRadius: 5,
-    alignItems: 'center',
   },
   darkInput: {
     backgroundColor: "#555", // Dark background for input in dark mode
